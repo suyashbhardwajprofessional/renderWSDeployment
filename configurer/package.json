@@ -1,0 +1,13 @@
+{
+  "name": "configurer",
+  "version": "0.0.1",
+  "description": "configure the application deployment from here",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+  },
+  "author": "suyash bhardwaj",
+  "license": "ISC"
+}
