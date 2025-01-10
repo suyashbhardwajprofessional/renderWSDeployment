@@ -13,6 +13,14 @@ app.use(express.json());
 morgan.token('payload', function getBody (req) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'))
 
+app.get('/info', (request,response) => {
+  Person.find({}).then(result => {
+    response.json({
+      TotalEntries: result.length
+    });
+  })
+})
+
 app.get('/api/persons', (request, response) => {
 	Person.find({}).then(result => {
     response.json(result);
