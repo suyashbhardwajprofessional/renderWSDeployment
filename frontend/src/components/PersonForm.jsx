@@ -2,8 +2,19 @@ const PersonForm = ({ addToPhonebook, newName, handleInputChange, newNumber, han
   return(<>
     <form onSubmit={addToPhonebook}>
       <div>
-        name: <input value={newName} onChange={handleInputChange} /><br/>
-        number: <input value={newNumber} onChange={handlePhoneInputChange} />
+        <table>
+          <thead></thead>
+          <tbody>
+          <tr>
+            <td>name:</td>
+            <td><input value={newName} onChange={handleInputChange} /></td>
+          </tr>
+          <tr>
+            <td>number:</td>
+            <td><input value={newNumber} onChange={handlePhoneInputChange} /></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
       <div>
         <button type="submit">add</button>

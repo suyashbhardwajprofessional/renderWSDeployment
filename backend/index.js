@@ -67,6 +67,7 @@ app.post('/api/persons', (request, response) => {
     console.log(`added ${body.name} number ${body.number} to the phonebook`)
     response.json(result)
   })
+  .catch(error => response.status(400).json({error:error}))
 });
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -77,7 +78,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number,
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })

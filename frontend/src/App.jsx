@@ -43,11 +43,17 @@ const App = () => {
     else{
       personService
         .create(personObject)
-        .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
-          setNotificationMessage(`Added ${returnedPerson.name}`)
-          setTimeout(() => {setNotificationMessage(null)}, 5000)
-        })
+          .then(returnedPerson => {
+            // alert(JSON.stringify(returnedPerson))
+            setPersons(persons.concat(returnedPerson))
+            setNotificationMessage(`Added ${returnedPerson.name}`)
+            setTimeout(() => {setNotificationMessage(null)}, 5000)
+          })
+          .catch(error => {
+            setIsErrorMessage(true);
+            setNotificationMessage(error.message)
+            setTimeout(() => {setNotificationMessage(null); setIsErrorMessage(false);}, 5000)
+          })
     }
     setNewName('');
     setNewNumber('');
@@ -57,27 +63,34 @@ const App = () => {
     if(confirm(`delete ${personObj.name}?`))
     personService
       .deletePerson(personObj.id)
-      .then(deletedObj=>setPersons(persons.filter(person=>person.id!==deletedObj.id)))
+      .then(deletedObj=>{
+        setNotificationMessage(`deleted ${personObj.name} successfully!`); 
+        setTimeout(() => {setNotificationMessage(null)}, 5000)
+        fetchPhonebook()})
   }
 
-  useEffect(() => {
+  function fetchPhonebook() {
     personService
       .getAll()
       .then(initialPersons => setPersons(initialPersons))
+  }
+
+  useEffect(() => {
+    fetchPhonebook();  
   }, [])
 
   return (
-    <div>
-      <Notification message={notificationMessage} isErrorMessage={isErrorMessage}/>
-      <h2>Phonebook</h2>
+    <div className='centeredDiv'>
+      <h2>Phonebook v0.0.2</h2>
       <Filter handleSearchInputChange={(evt)=>handleSearchInputChange(evt)}/>
-      <h4>Add a new contact:</h4>
+      <h4 id='leftsticked'>Add a new contact:</h4>
       <PersonForm 
         addToPhonebook={(evt)=>addToPhonebook(evt)} 
         newName={newName} 
         handleInputChange={(evt)=>handleInputChange(evt)} 
         newNumber={newNumber}
         handlePhoneInputChange={(evt)=>handlePhoneInputChange(evt)} />
+      <Notification message={notificationMessage} isErrorMessage={isErrorMessage}/>
       <h4>Numbers</h4>
       <Persons persons={persons} searchKey={searchKey} deleteHandler={deleteHandler}/>
     </div>
