@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require('express')
 var morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
 require('dotenv').config()
 
-const app = express();
+const app = express()
 
 app.use(cors())
 app.use(express.static('dist'))
-app.use(express.json());
+app.use(express.json())
 
 morgan.token('payload', function getBody (req) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'))
@@ -17,19 +17,19 @@ app.get('/info', (request,response) => {
   Person.find({}).then(result => {
     response.json({
       TotalEntries: result.length
-    });
+    })
   })
 })
 
 app.get('/api/persons', (request, response) => {
-	Person.find({}).then(result => {
-    response.json(result);
+  Person.find( {} ).then(result => {
+    response.json(result)
   })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-	Person.findById(request.params.id)
-  .then(person => {
+  Person.findById( request.params.id )
+    .then( person => {
 
       if (person) {
         response.json(person)
@@ -39,36 +39,36 @@ app.get('/api/persons/:id', (request, response, next) => {
     })
 
     .catch(error => {
-      return next(error);
+      return next(error)
     })
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(result => {
-      response.status(204).end()
+      response.status(204).json(result)
     })
     .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  console.log('request body is ', request.body);
-  if(!body.name) return response.status(400).json({error:'name is missing'})
-  else if(!body.number) return response.status(400).json({error:'number is missing'})
+  console.log('request body is ', request.body)
+  if(!body.name) return response.status(400).json({ error:'name is missing' })
+  else if(!body.number) return response.status(400).json({ error:'number is missing' })
   // else if(persons.find(person=>person.name===body.name)) return response.status(400).json({error:'already in phonebook! name must be unique'})
 
   const personObj = new Person({
     name: body.name,
     number: body.number,
   })
-  
+
   personObj.save().then(result => {
     console.log(`added ${body.name} number ${body.number} to the phonebook`)
     response.json(result)
   })
-  .catch(error => response.status(400).json({error:error}))
-});
+    .catch(error => response.status(400).json({ error:error }))
+})
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
@@ -96,7 +96,7 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'the malformatted id' })
-  } 
+  }
 
   next(error)
 }

@@ -12,7 +12,7 @@ const personNumber = process.argv[4]
 const url = `mongodb+srv://fullstack:${password}@cluster0.i2rin.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
-  .then(()=> {
+  .then(() => {
     console.log('connection successful!')
     console.log('')
     const personSchema = new mongoose.Schema({
@@ -29,7 +29,7 @@ mongoose.connect(url)
 
     if(personName || personNumber) {
       person.save().then(result => {
-        console.log(`added ${personName} number ${personNumber} to the phonebook`)
+        console.log(`added ${personName} number ${personNumber} to the phonebook`, result)
         mongoose.connection.close()
       })
     }
@@ -41,4 +41,4 @@ mongoose.connect(url)
         mongoose.connection.close()
       })
     }
-  }).catch((er)=>{console.log('connection failed with error message: ', er.errmsg);})
+  }).catch((er) => {console.log('connection failed with error message: ', er.errmsg)})
